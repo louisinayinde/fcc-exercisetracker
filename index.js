@@ -152,7 +152,11 @@ app.get('/api/users/:_id/logs', (req, res) => {
       resObj = {
         _id: userFound._id,
         username: userFound.username,
-        log: exercises,
+        log: {
+          description: exercises.description,
+          duration: exercises.duration,
+          date: new Date(exercises.date).toDateString()
+        },
         count: exercises.length
       };
     }
