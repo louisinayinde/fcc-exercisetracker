@@ -134,17 +134,28 @@ app.get('/api/users/:_id/logs', (req, res) => {
 
     // Utilisez await avec exec() et supprimez le callback
     let exercises = exerciseModel.find(queryObj).limit(limitParam).exec();
+    let resObj
 
-    let resObj = {
-      _id: userFound._id,
-      username: userFound.username,
-      log: exercises.map(x => ({
-        description: x.description,
-        duration: x.duration,
-        date: new Date(x.date).toDateString()
-      })),
-      count: exercises.length
-    };
+    if (Array.isArray(exercises)) {
+      resObj = {
+        _id: userFound._id,
+        username: userFound.username,
+        log: exercises.map(x => ({
+          description: x.description,
+          duration: x.duration,
+          date: new Date(x.date).toDateString()
+        })),
+        count: exercises.length
+      };
+    } else {
+      // Gérer le cas où exercises n'est pas un tableau
+      resObj = {
+        _id: userFound._id,
+        username: userFound.username,
+        log: exercises,
+        count: exercises.length
+      };
+    }
 
     // Ici, vous devez retourner resObj ou le gérer comme nécessaire
     // Par exemple, vous pouvez le retourner si cette fonction est appelée ailleurs
